@@ -5,10 +5,18 @@ document.addEventListener('DOMContentLoaded', function() {
         this.readed = readed;
     }
 
-    const misLibros = [];
+    let misLibros = [];
+
+    // Recuperar libros del almacenamiento local al cargar la página
+    if (localStorage.getItem('libros')) {
+        misLibros = JSON.parse(localStorage.getItem('libros'));
+        misLibros.forEach(mostrarLibro);
+    }
 
     document.getElementById('aggLibros').addEventListener('click', function(){
         document.getElementById('formulario').style.display = 'block';
+        document.getElementById('aggLibros').style.display = 'none'
+        
     });
 
     document.getElementById('cancel').addEventListener('click', function(){
@@ -16,7 +24,7 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 
     document.getElementById('formularioNuevosLibros').addEventListener('submit', function(event) {
-        event.preventDefault();
+        event.preventDefault(); 
 
         const titulo = document.getElementById('titulo').value;
         const autor = document.getElementById('autor').value;
@@ -25,20 +33,19 @@ document.addEventListener('DOMContentLoaded', function() {
         const libro = new Libros(titulo, autor, readed);
 
         misLibros.push(libro);
+        guardarLibrosEnLocalStorage();
 
         console.log(misLibros);
 
-        alert('Datos cargados');
 
         mostrarLibro(libro);
 
-        document.getElementById('formularioNuevosLibros').reset();
         document.getElementById('formulario').style.display = 'none';
     });
 
     function mostrarLibro(libro) {
         const listaLibros = document.getElementById('listaLibros');
-        if (!listaLibros) return;
+        if (!listaLibros) return; // Salir de la función si listaLibros es null
 
         const libroDiv = document.createElement('div');
         libroDiv.className = 'libro';
@@ -57,5 +64,9 @@ document.addEventListener('DOMContentLoaded', function() {
         libroDiv.appendChild(readedElemento);
 
         listaLibros.appendChild(libroDiv);
+    }
+
+    function guardarLibrosEnLocalStorage() {
+        localStorage.setItem('libros', JSON.stringify(misLibros));
     }
 });
