@@ -1,26 +1,61 @@
-const myBooks = [];
+document.addEventListener('DOMContentLoaded', function() {
+    function Libros(titulo, autor, readed) {
+        this.titulo = titulo;
+        this.autor = autor;
+        this.readed = readed;
+    }
 
-function Book(title, author, readed) {
-    this.title = title;
-    this.author = author;
-    this.readed = readed; 
-}
+    const misLibros = [];
 
-function guardarLibro(libro) {
-    myBooks.push(libro);
-}
+    document.getElementById('aggLibros').addEventListener('click', function(){
+        document.getElementById('formulario').style.display = 'block';
+    });
 
-const HarryPotter = new Book('Harry Potter', 'JK ROWLING', true);
+    document.getElementById('cancel').addEventListener('click', function(){
+        document.getElementById('formulario').style.display = 'none';
+    });
 
-const HarryPotter2 = new Book('Harry Potter', 'jk', false)
+    document.getElementById('formularioNuevosLibros').addEventListener('submit', function(event) {
+        event.preventDefault();
 
-guardarLibro(HarryPotter);
-guardarLibro(HarryPotter2)
+        const titulo = document.getElementById('titulo').value;
+        const autor = document.getElementById('autor').value;
+        const readed = document.getElementById('readed').checked;
 
-console.log(myBooks);
+        const libro = new Libros(titulo, autor, readed);
 
-myBooks.forEach((libro) => {
-    const contenedor_libro = document.createElement('div');
-    contenedor_libro.textContent = `Título: ${libro.title}, Autor: ${libro.author}, Leído: ${libro.readed}`;
-    document.body.append(contenedor_libro);
+        misLibros.push(libro);
+
+        console.log(misLibros);
+
+        alert('Datos cargados');
+
+        mostrarLibro(libro);
+
+        document.getElementById('formularioNuevosLibros').reset();
+        document.getElementById('formulario').style.display = 'none';
+    });
+
+    function mostrarLibro(libro) {
+        const listaLibros = document.getElementById('listaLibros');
+        if (!listaLibros) return;
+
+        const libroDiv = document.createElement('div');
+        libroDiv.className = 'libro';
+
+        const tituloElemento = document.createElement('h3');
+        tituloElemento.textContent = libro.titulo;
+
+        const autorElemento = document.createElement('p');
+        autorElemento.textContent = `Autor: ${libro.autor}`;
+
+        const readedElemento = document.createElement('p');
+        readedElemento.textContent = `Leído: ${libro.readed ? 'Sí' : 'No'}`;
+
+        libroDiv.appendChild(tituloElemento);
+        libroDiv.appendChild(autorElemento);
+        libroDiv.appendChild(readedElemento);
+
+        listaLibros.appendChild(libroDiv);
+    }
 });
